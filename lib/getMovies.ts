@@ -3,10 +3,6 @@ import type { Movie, TmdbSearchResponse } from "@/types/movie";
 export async function getMovies(): Promise<Movie[]> {
   const token = process.env.TMDB_ACCESS_TOKEN;
 
-  console.log("Token exists:", Boolean(token));
-  console.log("Starts with eyJ:", token?.startsWith("eyJ"));
-  console.log("Token length:", token?.length);
-
   const response = await fetch(
     "https://api.themoviedb.org/3/search/movie?query=return",
     {
@@ -16,6 +12,10 @@ export async function getMovies(): Promise<Movie[]> {
       },
     },
   );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movies: ${response.status}`);
+  }
 
   const data: TmdbSearchResponse = await response.json();
 
