@@ -1,42 +1,37 @@
-import MovieCard from "@/components/MovieCard";
-import { getMovies } from "@/lib/getMovies";
-import MoviePagination from "@/components/MoviePagination";
+import { Suspense } from "react";
+import SearchInput from "@/components/SearchInput";
+import MovieList from "@/components/MovieList";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type HomeProps = {
   searchParams: Promise<{
+    query?: string;
     page?: string;
   }>;
 };
 
 export default async function Home({ searchParams }: HomeProps) {
-  const { page } = await searchParams;
+  const { query, page } = await searchParams;
 
-  const currentPage = Number(page) || 1;
-
-  const movies = await getMovies();
-
-  const moviesPerPage = 6;
-
-  const startIndex = (currentPage - 1) * moviesPerPage;
-  const endIndex = startIndex + moviesPerPage;
-
-  const visibleMovies = movies.slice(startIndex, endIndex);
+  const searchQuery = query || "return";
+  const parsedPage = Number(page);
+  const currentPage =
+    Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
   return (
     <main className="mx-auto max-w-[936px] py-5">
       <h1 className="mb-5 text-xl">Movies</h1>
 
-      <div className="grid grid-cols-2 gap-x-[34px] gap-y-[35px]">
-        {visibleMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+      <div className="mb-5">
+        <SearchInput />
       </div>
-      <div className="mt-8 flex justify-center">
-        <MoviePagination
-          currentPage={currentPage}
-          totalMovies={movies.length}
-        />
-      </div>
+
+      <Suspense
+        key={`${searchQuery}-${currentPage}`}
+        fallback={<LoadingSpinner />}
+      >
+        <MovieList query={searchQuery} page={currentPage} />
+      </Suspense>
     </main>
   );
 }

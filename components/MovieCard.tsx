@@ -1,7 +1,7 @@
 import type { Movie } from "@/types/movie";
 import { Card, Tag } from "antd";
 import Image from "next/image";
-import { format } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { truncateText } from "@/utils/truncateText";
 
 type MovieCardProps = {
@@ -13,7 +13,13 @@ export default function MovieCard({ movie }: MovieCardProps) {
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
     : null;
 
-  const formattedDate = format(new Date(movie.releaseDate), "MMMM d, yyyy");
+  const releaseDate = parseISO(movie.releaseDate);
+
+  const formattedDate = isValid(releaseDate)
+    ? format(releaseDate, "MMMM d, yyyy")
+    : "Release date unknown";
+
+  console.log(formattedDate);
 
   return (
     <Card

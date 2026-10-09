@@ -1,10 +1,18 @@
-import type { Movie, TmdbSearchResponse } from "@/types/movie";
+import type { Movie, MoviesResult, TmdbSearchResponse } from "@/types/movie";
 
-export async function getMovies(): Promise<Movie[]> {
+export async function getMovies(
+  query: string,
+  page: number,
+): Promise<MoviesResult> {
   const token = process.env.TMDB_ACCESS_TOKEN;
 
+  const params = new URLSearchParams({
+    query,
+    page: String(page),
+  });
+
   const response = await fetch(
-    "https://api.themoviedb.org/3/search/movie?query=return",
+    `https://api.themoviedb.org/3/search/movie?${params.toString()}`,
     {
       headers: {
         accept: "application/json",
@@ -13,7 +21,21 @@ export async function getMovies(): Promise<Movie[]> {
     },
   );
 
+  console.log("TMDB REQUEST:", {
+    query,
+    page,
+    status: response.status,
+    ok: response.ok,
+  });
+
   if (!response.ok) {
+    const errorText = await response.text();
+
+    console.error("TMDB ERROR:", {
+      status: response.status,
+      message: errorText,
+    });
+
     throw new Error(`Failed to fetch movies: ${response.status}`);
   }
 
@@ -28,5 +50,11 @@ export async function getMovies(): Promise<Movie[]> {
     posterPath: movie.poster_path,
   }));
 
-  return movies;
+  console.log(movies);
+
+  return {
+    movies,
+    totalPages: data.total_pages,
+    totalResults: data.total_results,
+  };
 }

@@ -23,3 +23,9 @@ export type TmdbSearchResponse = {
   total_pages: number;
   total_results: number;
 };
+
+export type MoviesResult = {
+  movies: Movie[];
+  totalPages: number;
+  totalResults: number;
+};

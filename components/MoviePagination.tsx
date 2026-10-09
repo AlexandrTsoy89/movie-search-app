@@ -1,7 +1,7 @@
 "use client";
 
 import { Pagination } from "antd";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type MoviePaginationProps = {
   currentPage: number;
@@ -13,16 +13,22 @@ export default function MoviePagination({
   totalMovies,
 }: MoviePaginationProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   function handlePageChange(page: number) {
-    router.push(`/?page=${page}`);
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("page", String(page));
+
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
     <Pagination
       current={currentPage}
       total={totalMovies}
-      pageSize={6}
+      pageSize={20}
       showSizeChanger={false}
       onChange={handlePageChange}
     />
