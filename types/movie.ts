@@ -5,6 +5,8 @@ export type Movie = {
   rating: number;
   description: string;
   posterPath: string | null;
+  genreIds: number[];
+  userRating?: number;
 };
 
 export type TmdbMovie = {
@@ -28,4 +30,24 @@ export type MoviesResult = {
   movies: Movie[];
   totalPages: number;
   totalResults: number;
+};
+
+export type TmdbRatedMovie = TmdbMovie & {
+  rating: number;
+};
+
+export type TmdbRatedMoviesResponse = {
+  page: number;
+  results: TmdbRatedMovie[];
+  total_pages: number;
+  total_results: number;
+};
+
+export type TmdbGenre = {
+  id: number;
+  name: string;
+};
+
+export type TmdbGenreResponse = {
+  genres: TmdbGenre[];
 };

@@ -28,7 +28,7 @@ export default function MoviePagination({
     <Pagination
       current={currentPage}
       total={totalMovies}
-      pageSize={20}
+      pageSize={6}
       showSizeChanger={false}
       onChange={handlePageChange}
     />
