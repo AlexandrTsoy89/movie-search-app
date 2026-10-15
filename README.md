@@ -5,7 +5,7 @@ Ant Design, and The Movie Database (TMDB) API.
 
 ## Live Demo
 
-[View deployed application](https://movie-search-app-bice-eta.vercel.app)
+[View deployed application](https://movie-search-fznihbz18-alex-20e1.vercel.app)
 
 ## Features
 
